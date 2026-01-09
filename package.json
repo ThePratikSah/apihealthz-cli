@@ -1,0 +1,28 @@
+{
+  "name": "apihealthz-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "apihealthz": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "setup": "npm run build && npm link"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@inquirer/prompts": "^8.1.0",
+    "axios": "^1.13.2",
+    "commander": "^14.0.2",
+    "open": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
