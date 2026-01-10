@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "../utils/config";
 
 export const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://be.apihealthz.com",
   timeout: 10000,
 });
 
