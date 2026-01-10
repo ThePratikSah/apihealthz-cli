@@ -15,7 +15,7 @@ A command-line tool to monitor your API and website uptime and health. Keep trac
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
+- Node.js (v22 or higher)
 - npm or yarn
 
 ### Setup
@@ -23,7 +23,7 @@ A command-line tool to monitor your API and website uptime and health. Keep trac
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ThePratikSah/apihealthz-cli.git
 cd apihealthz-cli
 ```
 
