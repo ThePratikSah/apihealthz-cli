@@ -12,7 +12,7 @@ export async function add() {
 
   try {
     const url = await input({
-      message: "API URL to monitor:",
+      message: "API/Site URL to monitor:",
       validate: (v) =>
         v.startsWith("http://") || v.startsWith("https://")
           ? true

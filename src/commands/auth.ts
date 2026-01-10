@@ -8,7 +8,7 @@ export const authCommand = new Command("auth").description(
 authCommand
   .command("login")
   .description("Login to ApiHealthz")
-  .option("-p, --provider <provider>", "github | google")
+  .option("-p, --provider <provider>", "google")
   .action(async (options) => {
     await loginWithProvider(options.provider);
   });

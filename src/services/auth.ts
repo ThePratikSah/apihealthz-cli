@@ -18,8 +18,8 @@ interface DevicePollResponse {
 }
 
 export async function loginWithProvider(provider: string) {
-  if (!provider) {
-    console.log("Choose provider: github | google");
+  if (provider !== "google") {
+    console.log("Choose provider: google");
     process.exit(1);
   }
 
