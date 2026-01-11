@@ -24,7 +24,12 @@ export async function list() {
         ID: c.id,
         URL: c.url,
         Interval: `${c.interval_sec} seconds`,
-        "Last Status": c.last_status ? "✅ UP" : "❌ DOWN",
+        "Last Status":
+          c.last_status === "UP"
+            ? "✅ UP"
+            : c.last_status === "DOWN"
+            ? "❌ DOWN"
+            : "N/A",
         "Last Checked": c.last_checked_at
           ? formatDate(c.last_checked_at)
           : "N/A",
