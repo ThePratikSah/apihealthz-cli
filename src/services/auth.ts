@@ -30,6 +30,14 @@ export async function loginWithProvider(provider: string) {
   console.log("\nOpen this URL in your browser:");
   console.log(data.verification_url);
   console.log("\nEnter code:", data.user_code);
+  console.log("\nPress enter to continue...");
+
+  // wait till user press enter then open browser
+  await new Promise((resolve) => {
+    process.stdin.once("data", () => {
+      resolve(null);
+    });
+  });
 
   await open(data.verification_url);
 
@@ -94,7 +102,7 @@ async function pollForToken(deviceCode: string) {
       }
       saveToken(data.token);
       console.log("\n✔ Logged in successfully");
-      return;
+      return process.exit(0);
     }
 
     if (data.status === "expired") {
@@ -116,6 +124,32 @@ export async function authStatus() {
     return;
   }
 
-  const { data } = await api.get("/auth/me");
-  console.log(`✔ Logged in as ${data?.email}`);
+  try {
+    const { data } = await api.get("/auth/me");
+    console.log(`✔ Logged in as ${data?.data?.email}`);
+  } catch (error) {
+    console.log("\n✖ Error fetching auth status");
+
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // Server responded with error status
+        console.log(`  Status: ${error.response.status}`);
+        console.log(`  Message: ${error.response.statusText}`);
+        if (error.response.data) {
+          console.log(`  Details:`, error.response.data);
+        }
+      } else if (error.request) {
+        // Request was made but no response received
+        console.log(`  No response received from server`);
+      } else {
+        // Error setting up the request
+        console.log(`  Error: ${error.message}`);
+      }
+    } else {
+      // Unknown error type
+      console.log(`  Error:`, error);
+    }
+
+    process.exit(1);
+  }
 }

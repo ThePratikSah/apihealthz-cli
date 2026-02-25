@@ -22,6 +22,7 @@ export async function add() {
     const interval = await select({
       message: "Select check interval:",
       choices: [
+        { name: "Every 1 minute (only for premium users)", value: 60 },
         { name: "Every 5 minutes", value: 300 },
         { name: "Every 15 minutes", value: 900 },
         { name: "Every 30 minutes", value: 1800 },
@@ -30,15 +31,17 @@ export async function add() {
     });
 
     const intervalName =
-      interval === 300
-        ? "Every 5 minutes"
-        : interval === 900
-        ? "Every 15 minutes"
-        : interval === 1800
-        ? "Every 30 minutes"
-        : interval === 3600
-        ? "Every 1 hour"
-        : `${interval} seconds`;
+      interval === 60
+        ? "Every 1 minute (only for premium users)"
+        : interval === 300
+          ? "Every 5 minutes"
+          : interval === 900
+            ? "Every 15 minutes"
+            : interval === 1800
+              ? "Every 30 minutes"
+              : interval === 3600
+                ? "Every 1 hour"
+                : `${interval} seconds`;
 
     const alertType = await select({
       message: "How do you want to receive alerts?",
@@ -52,6 +55,7 @@ export async function add() {
 
     let slack_webhook;
     let email;
+    let whatsapp;
 
     if (alertType === "slack") {
       slack_webhook = await input({
@@ -70,6 +74,13 @@ export async function add() {
       });
     }
 
+    if (alertType === "whatsapp") {
+      whatsapp = await input({
+        message: "WhatsApp number (with country code, ex: +911234567890):",
+        validate: (v) => (v.includes("+") ? true : "Invalid WhatsApp number"),
+      });
+    }
+
     // Show a preview summary before confirmation
     console.log("\n=== Health Check Preview ===");
     console.log(`URL:           ${url}`);
@@ -79,14 +90,17 @@ export async function add() {
         alertType === null
           ? "None"
           : alertType === "slack"
-          ? "Slack"
-          : alertType === "email"
-          ? "Email"
-          : "N/A"
-      }`
+            ? "Slack"
+            : alertType === "email"
+              ? "Email"
+              : alertType === "whatsapp"
+                ? "WhatsApp"
+                : "N/A"
+      }`,
     );
     if (slack_webhook) console.log(`Slack Webhook: ${slack_webhook}`);
     if (email) console.log(`Email:         ${email}`);
+    if (whatsapp) console.log(`WhatsApp:      ${whatsapp}`);
     console.log("===========================\n");
 
     const proceed = await confirm({
@@ -104,10 +118,12 @@ export async function add() {
       interval_sec: interval,
       slack_webhook,
       email,
+      whatsapp,
     };
 
     if (slack_webhook) payload.slack_webhook = slack_webhook;
     if (email) payload.email = email;
+    if (whatsapp) payload.whatsapp = whatsapp;
 
     try {
       process.stdout.write("⠋ Creating health check...\r");
@@ -116,11 +132,12 @@ export async function add() {
         interval_sec: interval,
         slack_webhook,
         email,
+        whatsapp,
       });
-      console.log(`✔ Health check created successfully: ${response.id}`);
+      console.log(`✔ Health check created successfully: ${response?.data?.id}`);
     } catch (err) {
       console.error(
-        `✖ ${err instanceof Error ? err.message : "Unknown error"}`
+        `✖ ${err instanceof Error ? err.message : "Unknown error"}`,
       );
       process.exit(1);
     }
