@@ -6,7 +6,7 @@ export async function add() {
   const token = getToken();
 
   if (!token) {
-    console.error("✖ Authentication required. Run `apihealthz login`");
+    console.error("✖ Authentication required. Run `npx apihealthz auth login`");
     process.exit(1);
   }
 
@@ -49,7 +49,7 @@ export async function add() {
         { name: "Slack", value: "slack" },
         { name: "Email", value: "email" },
         { name: "WhatsApp", value: "whatsapp" },
-        { name: "None", value: null },
+        { name: "None (Default to email)", value: null },
       ],
     });
 
@@ -88,7 +88,7 @@ export async function add() {
     console.log(
       `Alert:         ${
         alertType === null
-          ? "None"
+          ? "None (Default to email)"
           : alertType === "slack"
             ? "Slack"
             : alertType === "email"
@@ -134,8 +134,11 @@ export async function add() {
         email,
         whatsapp,
       });
-      console.log(`✔ Health check created successfully: ${response?.data?.id}`);
+      console.log(
+        `✔ Health check created successfully: ${response?.data?._id}`,
+      );
     } catch (err) {
+      console.log(err);
       console.error(
         `✖ ${err instanceof Error ? err.message : "Unknown error"}`,
       );

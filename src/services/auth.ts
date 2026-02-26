@@ -27,10 +27,8 @@ export async function loginWithProvider(provider: string) {
     provider,
   });
 
-  console.log("\nOpen this URL in your browser:");
-  console.log(data.verification_url);
-  console.log("\nEnter code:", data.user_code);
-  console.log("\nPress enter to continue...");
+  console.log("\nCopy this code:", data.user_code);
+  console.log("\nPress enter to continue setting up in browser...");
 
   // wait till user press enter then open browser
   await new Promise((resolve) => {
